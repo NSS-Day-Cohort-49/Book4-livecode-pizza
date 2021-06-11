@@ -103,6 +103,26 @@ export const getSizes = () => [...database.sizes] //no curlies? return is implie
 export const getToppings = () => [...database.toppings] //no curlies? return is implied!
 export const getCrusts = () => [...database.crusts] //no curlies? return is implied!
 
-export const setOrderSize = (sizeId) => orderState.size = sizeId
-export const setOrderTopping = (toppingId) => orderState.topping = toppingId
-export const setOrderCrust = (crustId) => orderState.crust = crustId
+export const getOrders = () => [...database.orders]
+
+export const setOrderSize = (sizeId) => orderState.sizeId = sizeId
+export const setOrderTopping = (toppingId) => orderState.toppingId = toppingId
+export const setOrderCrust = (crustId) => orderState.crustId = crustId
+
+export const addCustomerOrder = () => {
+  // take the values from transient state ( orderState object )
+  // and persist those values in our db state
+  // while adding a unique id and a timestamp to the new order
+  const newOrder = {...orderState}
+
+  // calculate the unique id for our order
+  const lastIndex = database.orders.length - 1
+  // ternary statement...if...           ....then....              ..else...
+  newOrder.id = lastIndex >= 0 ? database.orders[lastIndex].id + 1 : 1
+  newOrder.timestamp = Date.now()
+  database.orders.push(newOrder)
+  // reset orderState to its original state
+
+  // broadcast a notification that permanent state has changed
+  document.dispatchEvent(new CustomEvent("dbStateChanged"))
+}

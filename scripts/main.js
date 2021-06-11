@@ -7,3 +7,5 @@ const render = () => {
 }
 
 render()
+
+document.addEventListener("dbStateChanged", () => render())
