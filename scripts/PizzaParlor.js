@@ -1,4 +1,7 @@
 import { SizeHTML } from "./Sizes.js"
+import { ToppingHTML } from "./Toppings.js"
+import { CrustHTML } from "./Crusts.js"
+
 
 export const PizzaParlor = () => {
   return `
@@ -10,9 +13,11 @@ export const PizzaParlor = () => {
         </article>
         <article>
             <h2>Crusts</h2>
+            ${CrustHTML()}
         </article>
         <article>
             <h2>Toppings</h2>
+            ${ToppingHTML()}
         </article>
     </div>
     <article id="side_order">

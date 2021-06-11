@@ -79,7 +79,6 @@ const database = {
 // will be filled with ids of size, crust, topping
 const orderState = {}
 
-
 // methods for interacting with the database
 const calcId = (arr) => {
   const lastIndex = arr.length - 1
@@ -94,5 +93,9 @@ const calcId = (arr) => {
 }
 
 export const getSizes = () => [...database.sizes] //no curlies? return is implied!
+export const getToppings = () => [...database.toppings] //no curlies? return is implied!
+export const getCrusts = () => [...database.crusts] //no curlies? return is implied!
 
 export const setOrderSize = (sizeId) => orderState.size = sizeId
+export const setOrderTopping = (toppingId) => orderState.topping = toppingId
+export const setOrderCrust = (crustId) => orderState.crust = crustId
