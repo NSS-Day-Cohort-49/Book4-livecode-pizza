@@ -72,7 +72,14 @@ const database = {
     }
   ],
   orders: [
-
+    // Some dummy data for testing listing orders. This is NOT in here as a result of the order form!
+    {
+      id: 1,
+      toppingId: 1,
+      sizeId: 2,
+      crustId: 2,
+      timestamp: 1620059468223
+    }
   ]
 }
 

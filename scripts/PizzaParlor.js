@@ -1,6 +1,8 @@
 import { SizeHTML } from "./Sizes.js"
 import { ToppingHTML } from "./Toppings.js"
 import { CrustHTML } from "./Crusts.js"
+import { OrderSubmitButton } from "./OrderSubmitButton.js"
+import { Orders } from "./Orders.js"
 
 
 export const PizzaParlor = () => {
@@ -22,10 +24,10 @@ export const PizzaParlor = () => {
     </div>
     <article id="side_order">
     </article>
-      SubmitOrderButton goes here
+      ${OrderSubmitButton()}
     <article>
         <h2>Orders Placed</h2>
-        Order List goes here
+        ${Orders()}
     </article>
   `
 }
