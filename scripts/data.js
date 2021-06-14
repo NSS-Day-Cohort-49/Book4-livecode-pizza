@@ -75,16 +75,38 @@ const database = {
     // Some dummy data for testing listing orders. This is NOT in here as a result of the order form!
     {
       id: 1,
-      toppingId: 1,
       sizeId: 2,
       crustId: 2,
       timestamp: 1620059468223
+    },
+    {
+      id: 2,
+      sizeId: 3,
+      crustId: 1,
+      timestamp: 1620059468300
+    }
+  ],
+  orders_toppings: [
+    {
+      id: 1,
+      toppingId: 1,
+      orderId: 1
+    },
+    {
+      id: 2,
+      toppingId: 4,
+      orderId: 1
+    },
+    {
+      id: 3,
+      toppingId: 5,
+      orderId: 2
     }
   ]
 }
 
 // will be filled with ids of size, crust, topping
-const orderState = {}
+const orderState = {toppings: []}
 
 // methods for interacting with the database
 const calcId = (arr) => {
@@ -102,6 +124,7 @@ const calcId = (arr) => {
 export const getSizes = () => [...database.sizes] //no curlies? return is implied!
 export const getToppings = () => [...database.toppings] //no curlies? return is implied!
 export const getCrusts = () => [...database.crusts] //no curlies? return is implied!
+export const getOrdersToppings = () => [...database.orders_toppings]
 
 export const getOrders = () => [...database.orders]
 
@@ -126,3 +149,16 @@ export const addCustomerOrder = () => {
   // broadcast a notification that permanent state has changed
   document.dispatchEvent(new CustomEvent("dbStateChanged"))
 }
+
+
+// TODO:
+// Change Toppings module
+// 1) Change HTML to allow multiple inputs
+// 2) Change the topping event listener to record/save multiple selections
+// Change Orders module:
+// 1) How we calculate the price
+// 2) HTML for diplaying the toppings
+// 3) Change how we get to the toppings objects
+// Change data module
+// 1) set function for toppings will add to an array in OrderState
+// 2) AddCustomer Order will now not add toppingId to an orderState. It will add an order object AND n orderToppings objects

@@ -2,7 +2,8 @@ import {
   getCrusts,
   getOrders,
   getToppings,
-  getSizes
+  getSizes,
+  getOrdersToppings
 } from "./data.js";
 
 // get all the data, so we can find the objects that go with the orders, since the only thing the orders contain are the ids of their crusts, toppings and sizes
@@ -13,6 +14,7 @@ const sizes = getSizes();
 export const Orders = () => {
 
   const orders = getOrders();
+  const ordersToppings = getOrdersToppings();
 
   const arrayOfOrderHTMLStrings = orders.map((order) => {
     let totalCost = 0
@@ -30,8 +32,22 @@ export const Orders = () => {
     totalCost += foundCrust.price
 
     // Find the matching topping
-    const foundTopping = toppings.find((topping) => topping.id === order.toppingId)
-    totalCost += foundTopping.price
+    // const foundTopping = toppings.find((topping) => topping.id === order.toppingId)
+    // totalCost += foundTopping.price
+
+    const foundOrdersToppings = ordersToppings.filter( (orderTopping) => {
+        return orderTopping.orderId === order.id
+    })
+
+    const foundToppings = toppings.filter( (topping) => {
+      return foundOrdersToppings.find( (orderTopping) => {
+          return orderTopping.toppingId === topping.id
+      })
+    })
+
+    for (const topping of foundToppings ) {
+      totalCost += topping.price
+    }
 
     // Return the HTML representation of the order
     return `
@@ -39,11 +55,12 @@ export const Orders = () => {
             Order #${order.id} placed at
             ${new Date(order.timestamp).toLocaleString()},
             is a ${foundSize.circumference}-inch ${foundCrust.type}
-            with ${foundTopping.name},
+            with ${foundToppings.map( (topping) => topping.name ).join(" and ")},
             for a cost of ${totalCost.toLocaleString("en-US", {
               style: "currency",
               currency: "USD",
-            })}. Yum.
+            })}
+           Yum.
         </div>
     `;
   });
