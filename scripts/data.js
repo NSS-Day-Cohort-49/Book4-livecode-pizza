@@ -84,6 +84,12 @@ const database = {
       sizeId: 3,
       crustId: 1,
       timestamp: 1620059468300
+    },
+    {
+      id: 3,
+      sizeId: 2,
+      crustId: 3,
+      timestamp: 1620059468300
     }
   ],
   orders_toppings: [
@@ -106,7 +112,7 @@ const database = {
 }
 
 // will be filled with ids of size, crust, topping
-const orderState = {toppings: []}
+let orderState = {toppings: []}
 
 // methods for interacting with the database
 const calcId = (arr) => {
@@ -121,22 +127,35 @@ const calcId = (arr) => {
   return newId
 }
 
+// provide access to the database state
 export const getSizes = () => [...database.sizes] //no curlies? return is implied!
 export const getToppings = () => [...database.toppings] //no curlies? return is implied!
 export const getCrusts = () => [...database.crusts] //no curlies? return is implied!
 export const getOrdersToppings = () => [...database.orders_toppings]
-
 export const getOrders = () => [...database.orders]
 
+// change the temporary/transient state to reflect the user's change to the UI
 export const setOrderSize = (sizeId) => orderState.sizeId = sizeId
-export const setOrderTopping = (toppingId) => orderState.toppingId = toppingId
+export const setOrderTopping = (id) => {
+  // Do this: add the id to the array
+  // or this: remove the id from the array
+  if(orderState.toppings.includes(id)) {
+    orderState.toppings = orderState.toppings.filter( (toppingId) => toppingId !== id )
+  } else {
+    orderState.toppings.push(id)
+  }
+}
 export const setOrderCrust = (crustId) => orderState.crustId = crustId
 
+// change the database/permanent state by creating a new order and n new orders_toppings
 export const addCustomerOrder = () => {
   // take the values from transient state ( orderState object )
   // and persist those values in our db state
   // while adding a unique id and a timestamp to the new order
-  const newOrder = {...orderState}
+  const newOrder = {
+    sizeId: orderState.sizeId,
+    crustId: orderState.crustId
+  }
 
   // calculate the unique id for our order
   const lastIndex = database.orders.length - 1
@@ -144,8 +163,19 @@ export const addCustomerOrder = () => {
   newOrder.id = lastIndex >= 0 ? database.orders[lastIndex].id + 1 : 1
   newOrder.timestamp = Date.now()
   database.orders.push(newOrder)
-  // reset orderState to its original state
 
+  // Loop through the toppings array in our temp state to make records for each in the database, with their associated order id
+  for ( const tId of orderState.toppings ) {
+    const newOrderTopping = {
+      id: database.orders_toppings.length - 1 >= 0 ? database.orders_toppings[lastIndex].id + 1 : 1,
+      orderId: newOrder.id,
+      toppingId: tId
+    }
+    database.orders_toppings.push(newOrderTopping)
+  }
+
+  // reset orderState to its original state
+  orderState = {toppings: []}
   // broadcast a notification that permanent state has changed
   document.dispatchEvent(new CustomEvent("dbStateChanged"))
 }
